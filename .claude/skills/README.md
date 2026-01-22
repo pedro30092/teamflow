@@ -8,11 +8,14 @@ This document explains how skills are organized in this project.
 teamflow/
 ├── research/
 │   └── PRODUCT_OVERVIEW.md          # General project documentation
-│                                      # (Referenced by product-owner skill)
+│                                      # (Referenced by skills)
 └── .claude/
     ├── skills/
-    │   └── product-owner/
-    │       └── SKILL.md              # Role definition + references
+    │   ├── product-owner/
+    │   │   └── SKILL.md              # Product Owner role
+    │   ├── project-manager/
+    │   │   └── SKILL.md              # Project Manager role
+    │   └── README.md                 # This file
     └── prompt-templates/
         └── skill-loader.md           # How to use skills
 ```
@@ -65,6 +68,20 @@ For complete product details, see:
 **Usage**:
 ```bash
 /product-owner create user stories for the calendar module
+/product-owner explain teamflow to an investor
+```
+
+### project-manager
+**Purpose**: Manage development execution, break down features into tasks, coordinate work
+
+**References**:
+- `research/PRODUCT_OVERVIEW.md` - Complete product details
+
+**Usage**:
+```bash
+/project-manager break down the calendar module into development tasks
+/project-manager create a task list for the MVP
+/project-manager identify dependencies for user authentication
 ```
 
 ## Adding New Skills
