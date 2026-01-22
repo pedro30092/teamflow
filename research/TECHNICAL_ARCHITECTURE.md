@@ -75,9 +75,19 @@ This document outlines the initial technical decisions and architecture for Team
 
 ### Multi-Tenancy Strategy
 
+**Access Pattern Decision (MVP)**: Shared Domain
+- All users access via single domain: `app.teamflow.com` (or `teamflow.com`)
+- URL structure: `/workspace/:orgId/projects/:projectId`
+- Subdomain-based routing (e.g., `famsa.teamflow.com`) deferred to post-MVP
+- Simpler deployment, single SSL certificate, easier testing for MVP
+
 **Data Isolation**: All queries filtered by organization_id
 - Users can only access data from their organizations
 - Application enforces organization boundaries at API level
+- Security enforced at three levels:
+  1. **Middleware**: Validates user belongs to requested organization
+  2. **Controller**: Checks permissions before processing
+  3. **Database**: All queries filtered by organization_id
 
 **Example Query Pattern**:
 ```sql
@@ -358,16 +368,37 @@ These don't need to be solved now, but keep in mind:
 
 ---
 
+## Architecture Decision
+
+**⚠️ IMPORTANT: A specific serverless architecture has been chosen for TeamFlow.**
+
+This document remains as a **reference for general SaaS architecture concepts**. For the **actual implementation architecture** that will be used for TeamFlow, see:
+
+👉 **[TECHNICAL_ARCHITECTURE_SERVERLESS.md](./TECHNICAL_ARCHITECTURE_SERVERLESS.md)** 👈
+
+### Decisions Made
+
+- [x] **Multi-Tenancy Access Pattern**: Shared domain for MVP (subdomain routing post-MVP)
+- [x] **Frontend Framework**: Angular 18+ with NgRx and signals
+- [x] **Backend Framework**: AWS Lambda (Node.js/TypeScript, serverless)
+- [x] **Database**: DynamoDB with single-table design
+- [x] **Hosting**: AWS (Lambda, API Gateway, S3, CloudFront)
+- [x] **Infrastructure as Code**: CDKTF (Terraform CDK with TypeScript)
+- [x] **Architecture Pattern**: Hexagonal architecture (ports & adapters)
+- [x] **Business Logic**: Lambda layers for shared code
+- [ ] **Email Service**: TBD (SendGrid, AWS SES, etc.)
+- [x] **File Storage**: S3 with pre-signed URLs
+
+---
+
 ## Open Questions / Decisions Needed
 
-Document decisions as you make them:
+Document remaining decisions:
 
-- [ ] **Frontend Framework**: React vs. Vue vs. Next.js?
-- [ ] **Backend Framework**: Node.js/Express vs. Python/Django vs. other?
-- [ ] **Database**: PostgreSQL vs. MySQL vs. MongoDB?
-- [ ] **Hosting**: Where to deploy?
 - [ ] **Email Service**: For invitations (SendGrid, AWS SES, etc.)?
-- [ ] **File Storage**: Local vs. S3 vs. Cloudinary (for attachments)?
+- [ ] **Authentication Details**: Cognito configuration, social login, MFA strategy
+- [ ] **UI Component Library**: Angular Material, PrimeNG, or custom?
+- [ ] **Testing Framework**: Jest vs. Vitest, Playwright vs. Cypress?
 
 ---
 
@@ -381,4 +412,4 @@ Document decisions as you make them:
 
 ---
 
-**Last Updated**: [Date]
+**Last Updated**: 2026-01-22

@@ -15,6 +15,8 @@ teamflow/
     │   │   └── SKILL.md              # Product Owner role
     │   ├── project-manager/
     │   │   └── SKILL.md              # Project Manager role
+    │   ├── software-architect/
+    │   │   └── SKILL.md              # Software Architect role
     │   └── README.md                 # This file
     └── prompt-templates/
         └── skill-loader.md           # How to use skills
@@ -82,6 +84,32 @@ For complete product details, see:
 /project-manager break down the calendar module into development tasks
 /project-manager create a task list for the MVP
 /project-manager identify dependencies for user authentication
+```
+
+### software-architect
+**Purpose**: Expert architect for TeamFlow's serverless multi-tenant SaaS architecture with deep expertise in Lambda, DynamoDB single-table design, CDKTF, hexagonal architecture, and Angular + NgRx
+
+**References**:
+- `research/TECHNICAL_ARCHITECTURE_SERVERLESS.md` - Complete serverless architecture specification
+- `research/PRODUCT_OVERVIEW.md` - Product features and business model
+
+**Expertise Areas**:
+- DynamoDB single-table design and access patterns
+- AWS Lambda architecture and layers
+- Hexagonal architecture (ports & adapters)
+- CDKTF (Terraform CDK with TypeScript)
+- AWS Cognito authentication
+- Angular + NgRx reactive patterns
+- Multi-tenant security patterns
+- Cost optimization for AWS free tier
+
+**Usage**:
+```bash
+/software-architect how should I design the DynamoDB access pattern for listing projects by organization?
+/software-architect explain how to structure a Lambda layer with hexagonal architecture
+/software-architect review this use case implementation for multi-tenant security
+/software-architect what CDKTF resources do I need for API Gateway with Cognito authorizer?
+/software-architect how do I implement organization switching in Angular with NgRx?
 ```
 
 ## Adding New Skills
