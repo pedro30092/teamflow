@@ -66,6 +66,10 @@ Desktop.ini
 *.bak
 *.cache
 
+# Project tmp directory (contains sensitive AWS data, reports, dumps)
+tmp/
+research/tmp/
+
 # Testing
 coverage/
 .nyc_output/

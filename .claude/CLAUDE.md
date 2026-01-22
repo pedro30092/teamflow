@@ -78,6 +78,97 @@ learning/           # Skip entirely
 learning/**/*       # All nested files and folders
 ```
 
+### 3. Temporary Files Convention
+
+**CRITICAL RULE**: All temporary files, dumps, reports, and sensitive data MUST go in `/tmp` at the project root.
+
+**Path**: `/home/pedro/Personal/development/teamflow/tmp/`
+
+**What Claude MUST do**:
+- ✅ **ALWAYS save** temporary files to `tmp/` directory
+- ✅ **ALWAYS use** timestamped filenames (e.g., `report-20260122-180702.txt`)
+- ✅ **ALWAYS create** `tmp/` directory if it doesn't exist (`mkdir -p tmp`)
+- ✅ **Reference** the full convention in `.claude/TMP_DIRECTORY_CONVENTION.md` for details
+
+**What goes in `/tmp`**:
+- AWS CLI outputs and billing reports
+- Debug logs and diagnostics
+- Any data that might contain credentials or account IDs
+- Script-generated reports and data dumps
+
+**Script pattern**:
+```bash
+PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+TMP_DIR="${PROJECT_ROOT}/tmp"
+mkdir -p "${TMP_DIR}"
+OUTPUT_FILE="${TMP_DIR}/report-$(date +%Y%m%d-%H%M%S).txt"
+```
+
+**Why**: The `tmp/` directory is in `.gitignore`, preventing accidental commits of sensitive AWS data, credentials, or personal information.
+
+### 4. AWS CLI Operations
+
+**CRITICAL RULES**: When executing AWS CLI commands, Claude must follow these conventions:
+
+**Environment Setup**:
+- ✅ **ALWAYS set** `export AWS_PAGER=""` (prevents interactive paging)
+- ✅ **ALWAYS use** `--profile teamflow-admin` (or specified profile name)
+- ✅ **NEVER** run AWS commands without specifying profile
+- ✅ **ALWAYS save** outputs to `tmp/` directory
+
+**Command Patterns**:
+```bash
+# Standard session setup
+export AWS_PAGER=""
+export AWS_PROFILE="teamflow-admin"
+
+# Verify identity before operations
+aws sts get-caller-identity --profile teamflow-admin
+
+# Save outputs with timestamps
+aws lambda list-functions --profile teamflow-admin \
+    > tmp/lambda-list-$(date +%Y%m%d-%H%M%S).json
+```
+
+**Script Template**:
+```bash
+#!/bin/bash
+set -euo pipefail  # Exit on error, undefined vars, pipe failures
+
+# Configuration
+export AWS_PAGER=""
+export AWS_PROFILE="teamflow-admin"
+readonly PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+readonly TMP_DIR="${PROJECT_ROOT}/tmp"
+readonly TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+
+# Ensure tmp directory exists
+mkdir -p "${TMP_DIR}"
+
+# Your AWS operations here
+aws sts get-caller-identity
+```
+
+**JSON Processing**:
+- ✅ **ALWAYS use jq** for parsing AWS CLI JSON outputs
+- ✅ Use `-r` flag for raw output (no quotes)
+- ✅ Extract specific fields instead of returning entire JSON
+
+**Example**:
+```bash
+# Get all Lambda function names
+aws lambda list-functions --profile teamflow-admin \
+    | jq -r '.Functions[].FunctionName'
+```
+
+**Security**:
+- ❌ **NEVER** hardcode credentials
+- ❌ **NEVER** commit AWS outputs (they go to `tmp/`)
+- ❌ **NEVER** log sensitive data (tokens, keys, passwords)
+- ✅ Verify profile before destructive operations
+
+**Reference**: See `.claude/AWS_CLI_REFERENCE.md` for detailed command examples for specific AWS services.
+
 ---
 
 ## Requesting Work from Claude

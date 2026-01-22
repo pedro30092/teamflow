@@ -1,2 +1,2 @@
 # Summarize any resolution using Gemini AI interface
-Provide a concise technical summary of the problems solved in this conversation. Use Markdown format. The summary should be in a single raw Markdown code block so it can be copied into a .md file. Include a title, bulleted technical points, and the final command-line fix.
+Provide a concise technical summary of the problems or explanation solved in this conversation. Use Markdown format. The summary should be in a single raw Markdown code block so it can be copied into a .md file. Include a title, bulleted technical points, and the final command-line fix.
