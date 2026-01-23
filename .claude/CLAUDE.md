@@ -169,6 +169,44 @@ aws lambda list-functions --profile teamflow-admin \
 
 **Reference**: See `.claude/AWS_CLI_REFERENCE.md` for detailed command examples for specific AWS services.
 
+### 5. Batch File Edits to Save Tokens
+
+**CRITICAL RULE**: When modifying a single file, make ALL changes in ONE Edit tool call instead of multiple sequential edits.
+
+**Why**: Each Edit tool call consumes tokens. Making 5 small edits to the same file wastes significantly more tokens than making 1 batched edit.
+
+**What Claude MUST do**:
+- ✅ **Plan all changes** to a file before making the first edit
+- ✅ **Combine multiple edits** into a single Edit tool call when possible
+- ✅ **Use a single old_string** that includes all sections being changed
+- ✅ **Use a single new_string** with all the updates
+
+**What Claude MUST NOT do**:
+- ❌ **Make multiple sequential edits** to the same file for the same logical change
+- ❌ **Edit one section**, then edit another section right after
+- ❌ **Make 3-5 small edits** when 1 larger edit would suffice
+
+**Example**:
+
+**❌ Bad (Multiple Edits - Wastes Tokens)**:
+```
+Edit 1: Change Requirements section
+Edit 2: Change Implementation Steps section
+Edit 3: Change Acceptance Criteria section
+Edit 4: Change Definition of Done section
+```
+
+**✅ Good (Single Batched Edit - Efficient)**:
+```
+Edit 1: Change entire file from Requirements through Definition of Done in one operation
+```
+
+**When to use multiple edits**:
+- Only when changes are in completely different parts of a large file (1000+ lines)
+- When sections are separated by too much content to include in one old_string
+
+**Rationale**: Token efficiency is critical. Every tool call has overhead. Batching edits can save 50-80% of tokens on file modifications.
+
 ---
 
 ## Requesting Work from Claude
