@@ -33,6 +33,7 @@ OUTPUT_FILE="${TMP_DIR}/report-$(date +%Y%m%d-%H%M%S).txt"
 - Debug logs and diagnostics
 - Any data that might contain credentials
 - Script-generated reports
+- Test data dumps
 
 ❌ Don't use `/tmp` for:
 - Source code
@@ -45,7 +46,8 @@ OUTPUT_FILE="${TMP_DIR}/report-$(date +%Y%m%d-%H%M%S).txt"
 
 ```bash
 # AWS data dump
-aws lambda list-functions > tmp/lambda-list-$(date +%Y%m%d).json
+aws lambda list-functions --profile teamflow-admin \
+    > tmp/lambda-list-$(date +%Y%m%d-%H%M%S).json
 
 # Billing report
 ./scripts/aws-billing-audit.sh
