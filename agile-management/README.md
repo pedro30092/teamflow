@@ -137,7 +137,7 @@ Use these emojis to mark status:
 
 ```bash
 # 1. Create new epic file
-cd .claude/skills/project-manager/epics/
+cd epics/
 cp EPIC_1_SETUP.md EPIC_2_CORE_INFRASTRUCTURE.md
 
 # 2. Edit file with epic details
@@ -154,7 +154,7 @@ git commit -m "docs: add Epic 2 - Core Infrastructure"
 
 ```bash
 # 1. Open relevant epic file
-code .claude/skills/project-manager/epics/EPIC_1_SETUP.md
+code epics/EPIC_1_SETUP.md
 
 # 2. Find your story (e.g., Story 1.2: Configure AWS Account)
 
@@ -175,7 +175,7 @@ git commit -m "chore: complete Story 1.2 - AWS account setup"
 
 ```bash
 # Sprint Planning (start of sprint)
-cd .claude/skills/project-manager/sprints/
+cd sprints/
 cp SPRINT_0_SETUP.md SPRINT_1_INFRASTRUCTURE.md
 # Edit file: add goal, dates, committed stories
 
@@ -199,13 +199,13 @@ git commit -m "docs: complete Sprint 1 retrospective"
 ### View All Epics
 
 ```bash
-ls -l .claude/skills/project-manager/epics/
+ls -l epics/
 ```
 
 ### View Current Sprint
 
 ```bash
-cat .claude/skills/project-manager/sprints/SPRINT_X_NAME.md
+cat sprints/SPRINT_X_NAME.md
 ```
 
 ### Count Completed Stories
@@ -246,7 +246,7 @@ If using GitHub Issues later, reference stories:
 Issue #42: Auth guard not redirecting to login
 
 **Related Story**: EPIC3-004 (Auth Guard implementation)
-**Epic File**: .claude/skills/project-manager/epics/EPIC_3_AUTHENTICATION.md
+**Epic File**: epics/EPIC_3_AUTHENTICATION.md
 ```
 
 ---

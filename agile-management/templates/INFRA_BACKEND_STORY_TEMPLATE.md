@@ -27,16 +27,6 @@ so that [reason/benefit].
 
 ---
 
-## Verification
-
-Test each requirement with these commands:
-
-```bash
-[command 1]          # Expected: [expected output]
-[command 2]          # Expected: [expected output]
-[command 3]          # Expected: [expected output]
-```
-
 ## Acceptance Criteria
 
 - [ ] [Criterion 1]
@@ -68,7 +58,6 @@ Test each requirement with these commands:
 ## Completion Notes
 
 **Completed**: YYYY-MM-DD HH:MM UTC
-**Verified By**: infra-backend-expert (Claude)
 **Status**: [Completion status message] ✅
 
 ---

@@ -200,9 +200,7 @@ Since JIRA is not available, we use a **file-based tracking system** in the proj
 
 ```
 teamflow/
-├── .claude/
-│   └── skills/
-│       └── project-manager/
+├── .agile-management/
 │           ├── PROJECT_MANAGER_OVERVIEW.md (this file)
 │           ├── templates/
 │           │   ├── INFRA_BACKEND_STORY_TEMPLATE.md
@@ -477,20 +475,6 @@ As stories complete:
 - [ ] Unchecked (not done)
 - [x] Checked (done)
 ```
-
-### Quick Status Check
-
-```bash
-# See all epic progress
-grep -r "Status:" .claude/skills/project-manager/epics/
-
-# See current sprint status
-cat .claude/skills/project-manager/sprints/SPRINT_X_NAME.md
-
-# Count completed stories
-grep -r "Status.*DONE" .claude/skills/project-manager/epics/ | wc -l
-```
-
 ---
 
 ## Next Steps
