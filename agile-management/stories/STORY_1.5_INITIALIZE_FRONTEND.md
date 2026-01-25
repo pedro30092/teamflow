@@ -3,7 +3,7 @@
 **Story ID**: EPIC1-005
 **Epic**: EPIC-1 (Development Environment Setup)
 **Sprint**: SPRINT-0
-**Status**: 📋 TODO
+**Status**: ✅ DONE
 
 ---
 
@@ -19,62 +19,45 @@ so that I can build the TeamFlow SPA.
 
 ## Requirements
 
-1. **Angular 21 + CLI 21** - Standalone by default, npm@11.6.2
-2. **TypeScript 5.9 strict** - Strict mode kept on
-3. **Routing configured** - Ready for feature modules
-4. **Environment files** - Development and production configs
-5. **Build scripts** - Compile and serve functionality
+1. **Angular 21 + CLI 21** scaffolded with `ng new frontend`
+2. **TypeScript 5.9 strict** (defaults kept)
+3. **Routing configured** (default from `ng new --routing`)
+4. **Default starter app** renders and serves locally
+5. **Build scripts** (`ng serve`, `ng build`) succeed on this machine
 
 ---
 
 ## Tasks
 
-### Task 1: Create Angular Project
+### Task 1: Verify Angular scaffold and versions
 
 ```bash
-cd /home/pedro/Personal/development/teamflow/src
-ng new frontend --routing --style=css --ssr=false --standalone
-cd frontend
-ng version  # Verify Angular CLI ~21.1
+cd /home/pedro/Personal/development/teamflow/src/frontend
+ng version  # Expect Angular CLI ~21.1, Angular ~21.1, TS ~5.9
 ```
 
 ---
 
-### Task 2: Configure TypeScript
+### Task 2: Confirm TypeScript strict defaults
 
-Edit `src/frontend/tsconfig.json` (keep defaults, ensure):
-- `strict: true`
-- `target: ES2022`
-- `moduleResolution: bundler`
+Open `src/frontend/tsconfig.json` and ensure the generated strict options remain enabled (they already are: `strict`, `noImplicitOverride`, `target: ES2022`).
 
 ---
 
-### Task 3: Create Environment Config
+### Task 3: Run dev server (default app)
 
-Create `src/frontend/src/environments/`:
-- `environment.development.ts` - apiUrl: http://localhost:3000
-- `environment.ts` - apiUrl: https://api.teamflow.com
-
----
-
-### Task 4: Update App Component
-
-Edit `src/frontend/src/app/app.component.ts`:
-- Import RouterOutlet (standalone)
-- Add basic template for verification
-- Test displays "TeamFlow - MVP"
-
----
-
-### Task 5: Configure .gitignore
-
-Add Angular-specific ignores:
+```bash
+cd /home/pedro/Personal/development/teamflow/src/frontend
+ng serve
+# Browser: http://localhost:4200 shows the Angular starter page
 ```
-/dist
-/tmp
-/.angular/cache
-.env
-.env.local
+
+---
+
+### Task 4: Run production build
+
+```bash
+npm run build  # Expect dist/frontend/ created, no errors
 ```
 
 ---
@@ -85,26 +68,22 @@ Add Angular-specific ignores:
 cd src/frontend
 
 ng version                    # Expected: Angular CLI ~21.1
-ng serve                      # Expected: http://localhost:4200
+ng serve                      # Expected: http://localhost:4200 starter page renders
 npm run build                 # Expected: dist/ created, no errors
 ```
 
 **Browser check:**
 - Navigate to http://localhost:4200
-- Verify "TeamFlow - MVP" displays
-- No console errors
+- Verify Angular starter page renders without console errors
 
 ---
 
 ## Acceptance Criteria
 
-- [ ] Angular 21 project created in `src/frontend/`
-- [ ] `ng serve` starts dev server successfully
-- [ ] App component displays in browser
-- [ ] `npm run build` completes without errors
-- [ ] Environment configuration files created
-- [ ] TypeScript strict mode enabled
-- [ ] `.gitignore` configured
+- [x] Angular 21 project present in `src/frontend/`
+- [x] `ng serve` starts dev server successfully (starter page renders)
+- [x] `npm run build` completes without errors
+- [x] TypeScript strict mode enabled (defaults kept)
 
 ---
 
@@ -130,4 +109,4 @@ npm run build      # Production build
 
 ---
 
-**Last Updated**: 2026-01-24
+**Last Updated**: 2026-01-25

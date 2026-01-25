@@ -2,7 +2,6 @@
 description: Product Owner for defining features, creating user stories, and prioritizing based on business value
 name: Product Owner
 argument-hint: Describe the feature or user need you want to define
-tools: ['search', 'web/fetch']
 infer: true
 target: vscode
 ---

@@ -1,0 +1,39 @@
+<div class="menu-item" [attr.data-level]="level()">
+  @if (item().children) {
+    <!-- Expandable parent item -->
+    <button
+      type="button"
+      class="menu-header expandable"
+      [class.expanded]="isExpanded()"
+      (click)="toggleExpand()"
+    >
+      <mat-icon class="chevron" aria-hidden="true">
+        {{ isExpanded() ? 'expand_more' : 'chevron_right' }}
+      </mat-icon>
+      @if (item().icon) {
+        <mat-icon class="item-icon" aria-hidden="true">{{ item().icon }}</mat-icon>
+      }
+      <span class="label">{{ item().label }}</span>
+    </button>
+    @if (isExpanded()) {
+      <div class="menu-children">
+        @for (child of item().children; track child.id) {
+          <app-tree-menu-item [item]="child" [level]="level() + 1" />
+        }
+      </div>
+    }
+  } @else {
+    <!-- Leaf item with route -->
+    <a
+      class="menu-header leaf"
+      [routerLink]="item().route"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      @if (item().icon) {
+        <mat-icon class="item-icon" aria-hidden="true">{{ item().icon }}</mat-icon>
+      }
+      <span class="label">{{ item().label }}</span>
+    </a>
+  }
+</div>

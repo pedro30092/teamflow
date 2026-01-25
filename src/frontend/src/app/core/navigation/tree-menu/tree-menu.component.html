@@ -1,0 +1,5 @@
+<nav class="tree-menu" role="navigation" aria-label="Main navigation">
+  @for (item of menuItems; track item.id) {
+    <app-tree-menu-item [item]="item" [level]="0" />
+  }
+</nav>

@@ -1,0 +1,8 @@
+.page-container {
+  padding: 24px;
+}
+
+h1 {
+  margin: 0 0 16px;
+  color: var(--mat-sys-primary);
+}
