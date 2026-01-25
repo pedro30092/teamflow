@@ -46,7 +46,7 @@ TeamFlow is a learning project focused on mastering modern cloud-native patterns
 
 ## Tech Stack
 
-**Backend**: AWS Lambda (Node.js 20.x) + DynamoDB + API Gateway + Cognito
+**Backend**: AWS Lambda (Node.js 24.x) + DynamoDB + API Gateway + Cognito
 **Frontend**: Angular 18 + NgRx + Dexie
 **Infrastructure**: CDKTF (Terraform CDK with TypeScript)
 **Architecture**: Hexagonal (ports & adapters)

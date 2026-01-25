@@ -168,7 +168,7 @@ TeamFlow will be built as a **serverless multi-tenant SaaS application** on AWS,
 **Lambda Configuration**:
 - **Memory**: 512MB (balance between cost and cold start)
 - **Timeout**: 30 seconds (API Gateway max)
-- **Runtime**: Node.js 20.x
+- **Runtime**: Node.js 24.x
 - **Architecture**: arm64 (Graviton2 - 20% cheaper, 19% faster)
 
 **Cold Start Mitigation**:
@@ -1384,7 +1384,7 @@ export class ApiStack extends TerraformStack {
     const businessLogicLayer = new LambdaLayerVersion(this, 'business_logic_layer', {
       layerName: 'teamflow-business-logic',
       filename: businessLogicArchive.outputPath,
-      compatibleRuntimes: ['nodejs20.x'],
+      compatibleRuntimes: ['nodejs24.x'],
       description: 'Shared business logic with hexagonal architecture',
     });
 
@@ -1398,7 +1398,7 @@ export class ApiStack extends TerraformStack {
     const dependenciesLayer = new LambdaLayerVersion(this, 'dependencies_layer', {
       layerName: 'teamflow-dependencies',
       filename: dependenciesArchive.outputPath,
-      compatibleRuntimes: ['nodejs20.x'],
+      compatibleRuntimes: ['nodejs24.x'],
       description: 'Shared npm dependencies',
     });
 
@@ -1413,7 +1413,7 @@ export class ApiStack extends TerraformStack {
       functionName: 'teamflow-create-project',
       filename: createProjectArchive.outputPath,
       handler: 'create.handler',
-      runtime: 'nodejs20.x',
+      runtime: 'nodejs24.x',
       role: lambdaRole.arn,
       architectures: ['arm64'], // Graviton2 - cheaper & faster
       memorySize: 512,
@@ -1552,7 +1552,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install dependencies
@@ -1576,7 +1576,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install dependencies
@@ -1603,7 +1603,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Download artifacts
@@ -1647,7 +1647,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - name: Install dependencies

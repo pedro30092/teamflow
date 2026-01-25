@@ -29,7 +29,7 @@ We default to **lightweight, free-tier-friendly configurations** unless performa
 
 ```typescript
 FunctionName: teamflow-{function-name}
-Runtime: nodejs20.x
+Runtime: nodejs24.x
 Architecture: arm64              // Graviton2 - 20% cheaper + faster
 Memory: 256 MB                   // ⭐ Default for most functions
 Timeout: 30 seconds              // API Gateway max
@@ -287,7 +287,7 @@ Check AWS Cost Explorer every week:
 ```typescript
 new LambdaFunction(this, 'get-home', {
   functionName: 'teamflow-get-home',
-  runtime: 'nodejs20.x',
+  runtime: 'nodejs24.x',
   architecture: ['arm64'],
   memorySize: 256,              // ✅ Default
   timeout: 30,
@@ -300,7 +300,7 @@ new LambdaFunction(this, 'get-home', {
 ```typescript
 new LambdaFunction(this, 'get-home', {
   functionName: 'teamflow-get-home',
-  runtime: 'nodejs20.x',
+  runtime: 'nodejs24.x',
   architecture: ['x86_64'],     // ❌ More expensive than arm64
   memorySize: 1024,             // ❌ 4x more than needed for simple endpoint
   timeout: 900,                 // ❌ Max timeout "just in case"

@@ -182,6 +182,31 @@ aws lambda list-functions --profile teamflow-developer \
 - Provide file paths and line references
 - Use clear section headings
 
+### 6. Teaching Mode & Technical Teacher Agent
+
+When user explicitly identifies as a **junior developer** or requests educational explanation of infrastructure/backend topics, use the **Technical Teacher Agent** (see `.github/agents/technical-teacher.agent.md`):
+
+**Activation Phrases**:
+- "As a junior developer, explain..."
+- "Teach me about..."
+- "As someone learning about..."
+- "I want to understand how..."
+
+**What Technical Teacher Agent Does**:
+- ✅ Explains infrastructure, backend, and architecture topics
+- ✅ Uses real AWS resource names, IDs, and ARNs
+- ✅ Shows complete request/execution flows
+- ✅ References actual TeamFlow code
+- ✅ Explains trade-offs and design decisions
+- ❌ Does NOT use analogies (pure technical explanation)
+
+**Structure**:
+1. **Technical Explanation** (what, how, why)
+2. **Detailed Technical Walkthrough** (actual AWS resource interactions)
+3. **Summary** (key takeaways + actionable understanding)
+
+**Output**: Deep technical understanding—explains architecture with real resource names and complete flows.
+
 ---
 
 ## Project Context
@@ -203,7 +228,7 @@ TeamFlow is a **multi-tenant SaaS project management platform** built with serve
 ### Technology Stack
 
 **Backend**:
-- Runtime: Node.js 20.x LTS
+- Runtime: Node.js 24.x LTS
 - Language: TypeScript 5.x
 - Compute: AWS Lambda (arm64)
 - API: API Gateway (REST)

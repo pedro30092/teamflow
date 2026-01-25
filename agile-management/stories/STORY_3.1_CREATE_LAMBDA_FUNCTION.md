@@ -22,7 +22,7 @@ so that we have the backend logic for the /api/home endpoint.
 ### Lambda Function Configuration
 
 1. **Function Name**: `teamflow-get-home`
-2. **Runtime**: Node.js 20.x
+2. **Runtime**: Node.js 24.x
 3. **Architecture**: arm64 (Graviton2 - 20% cheaper than x86_64)
 4. **Memory**: 256 MB (default per free tier optimization guidelines)
 5. **Timeout**: 30 seconds (API Gateway maximum)

@@ -115,9 +115,7 @@ Use these emojis to mark status:
 **Status**: ✅ DONE
 
 **Tasks**:
-- [x] Install Node.js 20.x
-- [x] Install AWS CLI v2
-- [x] Verify installations
+ [x] Install Node.js 24.x
 ```
 
 **In Sprint Files**:

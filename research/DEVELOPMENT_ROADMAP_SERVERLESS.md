@@ -105,7 +105,7 @@ This section defines the exact technologies and versions used in TeamFlow. Updat
 
 | Service | Configuration |
 |---------|--------------|
-| **Lambda** | Node.js 20.x, arm64 architecture, 512MB memory |
+| **Lambda** | Node.js 24.x, arm64 architecture, 512MB memory |
 | **API Gateway** | REST API |
 | **DynamoDB** | Pay-per-request billing, 25 RCU/WCU free tier |
 | **Cognito** | User Pool with email authentication |
@@ -189,7 +189,7 @@ This section defines the exact technologies and versions used in TeamFlow. Updat
 5. **Health Check Lambda**
    - [ ] Create first Lambda function: `health-check`
    - [ ] Handler: Return `{ status: 'ok', timestamp: new Date() }`
-   - [ ] Configure: Node.js 20.x, arm64, 512MB memory
+  - [ ] Configure: Node.js 24.x, arm64, 512MB memory
    - [ ] Attach layers (business-logic, dependencies)
    - [ ] Create API Gateway route: `GET /health`
    - [ ] Lambda integration (proxy)

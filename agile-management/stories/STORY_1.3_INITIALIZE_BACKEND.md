@@ -125,7 +125,7 @@ Replace the generated `tsconfig.json` with this configuration:
 ```
 
 **Key settings explained:**
-- `target: ES2020` - Node.js 20.x supports ES2020
+- `target: ES2020` - Node.js 24.x supports ES2020
 - `module: commonjs` - Lambda requires CommonJS modules
 - `outDir: ./dist` - Compiled JavaScript output directory
 - `rootDir: ./src` - TypeScript source directory

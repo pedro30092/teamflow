@@ -45,7 +45,7 @@ TeamFlow is a **multi-tenant SaaS project management platform** built with serve
 ### Stack Overview
 
 **Backend**:
-- Runtime: Node.js 20.x LTS
+- Runtime: Node.js 24.x LTS
 - Language: TypeScript 5.x
 - Compute: AWS Lambda (arm64)
 - API: API Gateway (REST)
@@ -129,7 +129,7 @@ TeamFlow is a **multi-tenant SaaS project management platform** built with serve
 **Setup Guide**: [SETUP_GUIDE.md](../SETUP_GUIDE.md)
 
 **Prerequisites** (1-2 days):
-- Node.js 20.x LTS
+- Node.js 24.x LTS
 - AWS CLI v2
 - CDKTF CLI
 - Angular CLI 18.x

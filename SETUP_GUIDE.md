@@ -25,18 +25,18 @@ This guide walks you through setting up your development environment for TeamFlo
 
 ### 1.1 Node.js
 
-**Install Node.js 20.x LTS** (see roadmap for exact version)
+**Install Node.js 24.x LTS** (see roadmap for exact version)
 
 **macOS/Linux**:
 ```bash
 # Using nvm (recommended)
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-nvm install 20
-nvm use 20
-nvm alias default 20
+nvm install 24
+nvm use 24
+nvm alias default 24
 
 # Verify
-node --version  # Should show v20.x.x
+node --version  # Should show v24.x.x
 npm --version   # Should show 10.x.x
 ```
 

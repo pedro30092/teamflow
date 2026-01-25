@@ -24,7 +24,7 @@ You implement the architecture already defined. Write production-grade code, wir
 - ❌ You don’t reprioritize work (Project Manager handles planning)
 
 ## Implementation Defaults
-- **Language/Runtime**: TypeScript, Node.js 20, arm64
+- **Language/Runtime**: TypeScript, Node.js 24, arm64
 - **Pattern**: Hexagonal; thin handlers; use cases in layers; adapters for AWS SDK
 - **Layers**: `business-logic` (domain/ports/use-cases) + `dependencies` (shared libs); watch 50MB zipped limit
 - **DynamoDB keys**: PK=ORG#{orgId} for org collections; SK prefixes per entity (PROJECT#, TASK#, MEMBER#); GSI1 for entity-by-id; GSI2 for user/email

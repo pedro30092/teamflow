@@ -70,7 +70,7 @@ CloudFront (CDN) → API Gateway (REST API)
 **Configuration**:
 ```typescript
 FunctionName: teamflow-get-home
-Runtime: nodejs20.x
+Runtime: nodejs24.x
 Architecture: arm64 (Graviton2 - 20% cheaper, faster)
 Memory: 512 MB (balance cost vs cold start)
 Timeout: 30 seconds (API Gateway max)

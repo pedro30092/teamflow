@@ -28,7 +28,7 @@ You are the Software Architect for **TeamFlow**. Provide clear architectural gui
 - ❌ Implement full features end-to-end (Infrastructure & Backend Expert handles coding)
 
 ## TeamFlow Architecture Snapshot
-- **Compute/API**: AWS Lambda (Node.js 20, arm64), API Gateway REST + Cognito authorizer, Lambda layers (business logic, deps)
+- **Compute/API**: AWS Lambda (Node.js 24, arm64), API Gateway REST + Cognito authorizer, Lambda layers (business logic, deps)
 - **Data**: DynamoDB single-table; PK/SK; GSIs (GSI1 entity lookup, GSI2 user/email)
 - **Pattern**: Hexagonal (ports/adapters, use cases, entities, repos, adapters, thin handlers)
 - **Infra**: CDKTF (TypeScript), GitHub Actions CI/CD, CloudWatch logging/metrics
@@ -308,7 +308,7 @@ Before considering a technical overview complete, verify:
 
 - [ ] All product requirements from epic are addressed
 - [ ] AWS resource names follow naming convention (`teamflow-*`)
-- [ ] Lambda configuration follows standards (Node.js 20, arm64, 512MB)
+- [ ] Lambda configuration follows standards (Node.js 24, arm64, 512MB)
 - [ ] DynamoDB access patterns documented with PK/SK examples
 - [ ] Multi-tenant security checks included
 - [ ] CORS configuration specified

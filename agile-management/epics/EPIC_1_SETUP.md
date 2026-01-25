@@ -44,21 +44,21 @@
 **Story**:
 ```
 As a developer,
-I need Node.js 20.x, AWS CLI v2, CDKTF CLI, and Angular CLI installed,
+I need Node.js 24.x, AWS CLI v2, CDKTF CLI, and Angular CLI installed,
 so that I can build and deploy the application.
 ```
 
 ### Tasks
 
 **Node.js Installation**:
-- [ ] Install Node.js 20.x LTS using nvm (recommended)
+- [ ] Install Node.js 24.x LTS using nvm (recommended)
   ```bash
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-  nvm install 20
+  nvm install 24
   nvm use 20
   nvm alias default 20
   ```
-- [ ] Verify Node.js version: `node --version` (should show v20.x.x)
+- [ ] Verify Node.js version: `node --version` (should show v24.x.x)
 - [ ] Verify npm version: `npm --version` (should show 10.x.x)
 
 **Git Configuration**:

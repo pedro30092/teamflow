@@ -14,7 +14,12 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "upgrade": "npm i cdktf@latest cdktf-cli@latest",
-    "upgrade:next": "npm i cdktf@next cdktf-cli@next"
+    "upgrade:next": "npm i cdktf@next cdktf-cli@next",
+    "deploy": "./scripts/deploy.sh",
+    "deploy:infra": "./scripts/deploy.sh --skip-backend",
+    "destroy": "./scripts/destroy.sh",
+    "destroy:logs": "./scripts/destroy.sh --delete-logs",
+    "clean": "rm -rf cdktf.out dist *.js *.d.ts *.tsbuildinfo"
   },
   "engines": {
     "node": ">=20.9"
@@ -31,5 +36,10 @@
     "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
+  }
+  ,
+  "optionalScripts": {
+  },
+  "overrides": {
   }
 }
