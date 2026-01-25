@@ -1,6 +1,6 @@
 ---
 description: Frontend lead for Angular app (TeamFlow)
-name: Frontend
+name: Frontend Expert
 argument-hint: Describe the UI/UX feature to build or refactor
 infer: true
 target: vscode

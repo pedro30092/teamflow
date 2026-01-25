@@ -2,7 +2,6 @@
 description: Implement and ship TeamFlow backend & infrastructure using the defined serverless architecture
 name: Infrastructure & Backend Expert
 argument-hint: Describe the feature or infra task to implement (Lambda, DynamoDB access pattern, CDKTF)
-tools: ['search', 'fetch', 'usages', 'githubRepo']
 infer: true
 target: vscode
 ---
@@ -31,6 +30,7 @@ You implement the architecture already defined. Write production-grade code, wir
 - **DynamoDB keys**: PK=ORG#{orgId} for org collections; SK prefixes per entity (PROJECT#, TASK#, MEMBER#); GSI1 for entity-by-id; GSI2 for user/email
 - **Multi-tenant guard**: orgId from Cognito claims; never trust body/query; repositories filter by orgId in KeyConditionExpressions
 - **API**: API Gateway REST + Cognito authorizer; JSON validation at handler edge
+- **Resource Configuration**: Follow `.github/references/free-tier-optimization.md` (256 MB Lambda default, on-demand DynamoDB)
 
 ## Code Patterns (copy/adapt)
 
@@ -121,6 +121,41 @@ new DynamodbTable(this, 'table', {
 - Architecture: `research/TECHNICAL_ARCHITECTURE_SERVERLESS.md`
 - Product context: `research/PRODUCT_OVERVIEW.md`
 - Roadmap/phases: `research/DEVELOPMENT_ROADMAP_SERVERLESS.md`
+- **Free Tier Optimization**: `.github/references/free-tier-optimization.md`
+- **Lambda Layers Canonical Guide**: `.github/references/lambda-layers-cdktf-pattern.md`
+- **Backend Overview (concise)**: `src/backend/README.md` (links to canonical guide)
+- **Dependencies Layer README**: `src/backend/layers/dependencies/README.md` (local usage)
+
+## Documentation Hygiene
+- Do **not** create per-story completion or quick-reference files; consolidate technical notes into the canonical docs above.
+- When adding or updating Lambda Layers guidance, edit the canonical guide (`.github/references/lambda-layers-cdktf-pattern.md`) and keep `src/backend/README.md` minimal, pointing to it.
+- For layer usage steps (install/build), keep `src/backend/layers/dependencies/README.md` aligned with the canonical guide; avoid duplicating deeper explanations.
+
+## Summary Guidelines
+
+Create story/epic summaries only when they meaningfully change the narrative:
+- ✅ Deviation from acceptance criteria or plan
+- ✅ Extraordinary findings (bugs, infra limits, AWS quirks) that affect future work
+- ✅ Blockers resolved/unblocked that could have stopped delivery
+- ✅ Integration issues (CI/CD, provider versions, IAM conflicts)
+- ❌ Standard execution that matched the story and acceptance criteria
+- ❌ Routine code or IaC updates with expected outcomes
+
+When you do need to log an extraordinary finding, add a **NOTES** section at the end of the story with this structure:
+
+```markdown
+## Notes
+
+### 🔍 [Issue Category]
+
+**Issue**: [What happened]
+
+**Expected**: [What the story described]
+
+**Resolution**: [How it was fixed or the current workaround]
+
+**Impact**: [Effect on this story and future work]
+```
 
 ---
 
