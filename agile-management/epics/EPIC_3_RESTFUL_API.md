@@ -94,6 +94,19 @@ These will be built in future epics:
 
 ---
 
+## Related Stories & Updates
+
+### Story 3.4: CDKTF Deployment Scripts (Completed)
+- Deployment automation is in place via `src/infrastructure/scripts/deploy.sh` and `src/infrastructure/scripts/destroy.sh`.
+- NPM commands available: `deploy`, `deploy:infra`, `destroy`, `destroy:logs`, and `clean` in `src/infrastructure/package.json`.
+- Scripts handle build, synth, deploy/destroy, and surface outputs (API URL) to `tmp/` for quick verification.
+- Use for fast iteration during this epic:
+  - `npm run deploy` to build + deploy
+  - `npm run deploy:infra` to deploy infrastructure only
+  - `npm run destroy` (or `npm run destroy:logs`) to tear down
+
+---
+
 ## Definition of Done
 
 Epic 3 is complete when:
@@ -103,6 +116,7 @@ Epic 3 is complete when:
 - [ ] CORS configured for browser requests
 - [ ] API has public HTTPS URL
 - [ ] CloudWatch logging enabled
+- [ ] Deployment automation available via scripts (deploy/destroy) and npm commands
 
 **Backend**:
 - [ ] Lambda function deployed and responding
