@@ -53,6 +53,93 @@ You are the Angular frontend lead for **TeamFlow**. Build and refactor UI with b
 - Meets accessibility requirements
 - Code matches Angular 21 + TS 5.9 conventions
 
+## Story Review & Completion Process
+
+**Critical Rule**: No story is marked complete without user approval after review.
+
+### Phase 1: Implementation Review (BEFORE Marking Complete)
+
+Before marking any story as done, perform:
+
+1. **Re-read Story Requirements**
+   - Verify all acceptance criteria are addressed
+   - Check definition of done
+   - Confirm no scope creep
+
+2. **Review Implementation**
+   - Examine all created/modified files
+   - Check for TypeScript errors: `npm run build`
+   - Verify no console errors: `ng serve`
+   - Ensure code follows Angular conventions (no `any`, proper typing, etc.)
+   - Check for hardcoded values (should be in config/environment)
+   - Verify accessibility (WCAG AA compliant)
+
+3. **Document Findings**
+   - List what works ✓
+   - List any issues found ✗
+   - Note any deviations from story requirements
+   - Highlight unexpected learnings or blockers
+
+### CRITICAL: Issue Resolution Process
+
+**IMPORTANT RULE**: When issues are discovered during review:
+
+1. **DO NOT update story file yet**
+   - Do not modify acceptance criteria, tasks, or content
+   - Do not change story status
+   
+2. **Present the issue to user**
+   - Clearly explain what went wrong
+   - Show the error or problem
+   - Propose a solution with reasoning
+   - Ask: "Should we fix it this way?"
+   
+3. **Wait for user approval**
+   - Get explicit confirmation that the proposed approach is correct
+   - Discuss alternatives if needed
+   - Make sure you're solving the RIGHT problem, not just A problem
+   
+4. **ONLY after approval**
+   - Implement the fix
+   - Update the story with corrected information
+   - Re-verify that the fix works
+   - Then proceed to Phase 2
+
+**Rationale**: Updating the story before approval wastes time if the approach changes. Better to get alignment first, then implement and document once.
+
+### Phase 2: User Approval (AFTER Review, BEFORE Completion)
+
+4. **Present Review Results**
+   - Show implementation summary
+   - Show any issues/concerns found
+   - Ask user: "Everything looks good. Ready to mark complete?" 
+   - **WAIT for explicit user approval**
+
+5. **Address User Feedback**
+   - If user requests changes, make them
+   - Re-run verification
+   - Ask for approval again
+
+6. **Mark Complete ONLY After Approval**
+   - Update story status to ✅ COMPLETED
+   - Update story file with completion details
+   - Do NOT skip this step
+
+### The Review Checklist
+
+Before asking for approval, verify:
+- [ ] All acceptance criteria met
+- [ ] `npm run build` passes (no TypeScript errors)
+- [ ] `ng serve` starts without errors
+- [ ] No console warnings/errors in browser
+- [ ] Code follows Angular style guide
+- [ ] No hardcoded configuration values
+- [ ] Files properly named and located
+- [ ] No breaking changes to existing features
+- [ ] All definition of done items checked
+
+---
+
 ## Summary Guidelines
 
 ### When to Create Summaries

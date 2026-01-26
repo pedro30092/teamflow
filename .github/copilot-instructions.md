@@ -2,6 +2,21 @@
 
 **Last Updated**: 2026-01-24
 
+---
+
+## 🛑 ABSOLUTELY FORBIDDEN (Check Before Any Action)
+
+**DO NOT create/modify/update without explicit user request**:
+- Story files (agile-management/stories/)
+- Summary or documentation files
+- Any files outside the code being built
+- Story status or completion
+- Retrospectives or work notes
+
+**Before creating ANY file**: Ask — "Did the user explicitly request this?"
+
+---
+
 This document provides guidelines for effectively working with GitHub Copilot on the TeamFlow project. These instructions help Copilot understand the project context, constraints, and best practices.
 
 ---
