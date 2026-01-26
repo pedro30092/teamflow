@@ -306,17 +306,27 @@ Keep this epic focused: **make local development easy and fast**. Everything els
 
 ## User Stories
 
-This epic will be broken into the following user stories (managed by Project Manager):
+This epic has been broken into the following user stories:
 
-**Story 1**: Configure Angular to read API endpoint from environment
-**Story 2**: Document and test local Angular + cloud backend setup
-**Story 3**: Create local backend runtime (Node.js server)
-**Story 4**: Initialize local database with sample data
-**Story 5**: Create environment configuration management (`.env` handling)
-**Story 6**: Document and test full local development setup
-**Story 7**: Create setup troubleshooting guide
+### Completed Stories
+- **Story 4.1**: Deploy Home Endpoint Lambda to AWS ✅
+- **Story 4.2**: Backend Build System with TypeScript ✅
+- **Story 4.3**: Lambda Dependencies Layer ✅
+- **Story 4.4**: Create Local Express Backend Server ✅
 
-See Project Manager breakdown for detailed task lists for each story.
+### Current Story
+- **Story 4.5**: Local Development Environment Documentation 📋
+  - Document local Express server usage in `src/backend/README.md`
+  - Add LOCAL SERVER section with quick start, scripts, configuration
+  - Document hot reload workflow and architecture decisions
+  - Include troubleshooting for common issues
+
+### Deferred/Simplified
+- **Story 4.5 (Original)**: Mock Database - **Not required** (deferred to future story when database is implemented)
+- **Story 4.6**: Configuration System - **Merged into 4.5** (basic .env is sufficient, documented in README)
+- **Story 4.7**: Complete Documentation - **Merged into 4.5** (consolidated into backend README per project conventions)
+
+See individual story files in `agile-management/stories/` for detailed task breakdowns.
 
 ---
 
