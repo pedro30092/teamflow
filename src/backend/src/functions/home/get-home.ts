@@ -17,7 +17,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
         'Access-Control-Allow-Headers': 'Content-Type',
       },
       body: JSON.stringify({
-        message: 'hello world, how are you? Well, im fine thanks',
+        message: 'hello world, how are you? Im fine',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'production',
       }),

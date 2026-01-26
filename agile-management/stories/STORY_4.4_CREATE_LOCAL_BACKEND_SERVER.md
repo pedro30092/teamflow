@@ -3,7 +3,7 @@
 **Story ID**: EPIC4-4  
 **Epic**: EPIC-4 (Cloud + Local Integration)  
 **Sprint**: SPRINT-3  
-**Status**: 📋 TODO  
+**Status**: ✅ DONE  
 **Story Type**: Backend Infrastructure
 
 ---
@@ -12,22 +12,23 @@
 
 ```
 As a backend developer,
-I want to run the TeamFlow API locally using Express.js,
-so that I can develop and test backend features without AWS deployments.
+I want to run the TeamFlow API locally using Express.js that invokes compiled Lambda handlers,
+so that I can develop and test backend features with real Lambda code without AWS deployments.
 ```
 
 ---
 
 ## Requirements
 
-### Express Server
+### Express Server with Lambda Integration
 
 1. **Listening on port 3000** - Standard development port
 2. **CORS enabled** - Allow requests from localhost:4200 (Angular)
-3. **Health check endpoint** - GET `/health` to verify server running
-4. **Home endpoint** - GET `/api/home` for basic test
-5. **Proper error handling** - 500 errors logged, not exposed
-6. **Environment configuration** - Read from `.env` file
+3. **Lambda handler invocation** - GET `/api/home` invokes compiled Lambda handler
+4. **Mock API Gateway event** - Translates Express request → Lambda event
+5. **Handler response passthrough** - Returns Lambda response to client
+6. **Proper error handling** - Errors logged, not exposed
+7. **Environment configuration** - Read from `.env` file
 
 ### Directory Structure
 
@@ -36,8 +37,10 @@ src/backend/local-dev/
 ├── src/
 │   ├── index.ts              # Main Express app
 │   ├── config.ts             # Environment configuration
+│   ├── utils/
+│   │   └── lambda-invoker.ts # Lambda handler wrapper
 │   └── routes/
-│       └── health.ts         # Health check routes
+│       └── handlers.ts       # Route handlers (invoke Lambda)
 ├── .env.example              # Template
 ├── .env                       # Actual config (not tracked)
 ├── package.json              # Dependencies
@@ -49,27 +52,30 @@ src/backend/local-dev/
 
 ## Acceptance Criteria
 
-- [ ] Express.js server created and listens on port 3000
-- [ ] Server starts with `npm run dev` command
-- [ ] GET `/health` returns `{ status: "ok" }`
-- [ ] GET `/api/home` returns `{ message: "hello from local backend" }`
-- [ ] CORS configured for localhost:4200
-- [ ] `.env` file configuration working
-- [ ] Server can be stopped cleanly with Ctrl+C
-- [ ] No hardcoded configuration values
-- [ ] TypeScript compiles without errors
-- [ ] Error middleware catches and logs errors
+- [x] Express.js server created and listens on port 3000
+- [x] Server starts with `npm run dev` command
+- [x] GET `/api/home` invokes compiled Lambda handler and returns response
+- [x] Lambda handler receives mock API Gateway event with correct structure
+- [x] Express request is translated to API Gateway event format
+- [x] Lambda response is passed through to client
+- [x] CORS configured for localhost:4200
+- [x] `.env` file configuration working
+- [x] Server can be stopped cleanly with Ctrl+C
+- [x] No hardcoded configuration values
+- [x] TypeScript compiles without errors
+- [x] Error middleware catches and logs errors
 
 ---
 
 ## Definition of Done
 
-- [ ] Express server running on port 3000
-- [ ] Health check responds
-- [ ] Home endpoint responds
-- [ ] CORS allows Angular requests
-- [ ] Configuration via `.env`
-- [ ] Ready for STORY 4.5 (Mock database)
+- [x] Express server running on port 3000
+- [x] Lambda handler invoked from Express
+- [x] Home endpoint responds with Lambda handler output
+- [x] CORS allows Angular requests
+- [x] Configuration via `.env`
+- [x] Mock API Gateway event created correctly
+- [x] Ready for STORY 4.5 (Mock database)
 
 ---
 
@@ -107,8 +113,12 @@ touch src/backend/local-dev/.env.example
   "description": "Local development backend for TeamFlow",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "build": "tsc",
+    "build:backend": "npm --prefix .. run build",
+    "watch:backend": "npm --prefix .. run watch",
+    "dev:server": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "dev": "npm run build:backend && npm run dev:server",
+    "dev:watch": "concurrently \"npm:watch:backend\" \"npm:dev:server\"",
     "start": "node dist/index.js",
     "lint": "eslint src/**/*.ts",
     "test": "jest"
@@ -124,7 +134,8 @@ touch src/backend/local-dev/.env.example
   "dependencies": {
     "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.3"
+    "dotenv": "^16.0.3",
+    "concurrently": "^9.1.2"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
@@ -287,50 +298,155 @@ export function validateConfig(): void {
 
 ---
 
-### Task 7: Create health routes
+### Task 7: Create Lambda invoker utility
 
-**Location**: `src/backend/local-dev/src/routes/health.ts`
+**Location**: `src/backend/local-dev/src/utils/lambda-invoker.ts`
+
+**Content**:
+```typescript
+import { Request } from 'express';
+import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
+
+/**
+ * Creates a mock API Gateway event from Express request
+ * This simulates what API Gateway passes to Lambda handlers
+ */
+export function createMockAPIGatewayEvent(
+  req: Request,
+  body?: any
+): APIGatewayProxyEvent {
+  return {
+    resource: req.path,
+    path: req.path,
+    httpMethod: req.method,
+    headers: req.headers as Record<string, string>,
+    multiValueHeaders: {},
+    queryStringParameters: req.query as Record<string, string> | null,
+    multiValueQueryStringParameters: null,
+    pathParameters: null,
+    stageVariables: null,
+    requestContext: {
+      accountId: '000000000000',
+      apiId: 'local',
+      protocol: 'HTTP/1.1',
+      httpMethod: req.method,
+      path: req.path,
+      stage: 'local',
+      requestId: `local-${Date.now()}`,
+      requestTime: new Date().toISOString(),
+      requestTimeEpoch: Date.now(),
+      identity: {
+        sourceIp: req.ip || '127.0.0.1',
+      },
+      authorizer: undefined,
+    },
+    body: body ? JSON.stringify(body) : null,
+    isBase64Encoded: false,
+  } as APIGatewayProxyEvent;
+}
+
+/**
+ * Invokes a Lambda handler with mock event
+ */
+export async function invokeLambdaHandler(
+  handler: (event: APIGatewayProxyEvent, context: any) => Promise<APIGatewayProxyResult>,
+  event: APIGatewayProxyEvent
+): Promise<APIGatewayProxyResult> {
+  // Mock Lambda context
+  const context = {
+    functionName: 'local-function',
+    functionVersion: '$LATEST',
+    invokedFunctionArn: 'arn:aws:lambda:local:000000000000:function:local',
+    memoryLimitInMB: 256,
+    awsRequestId: `local-${Date.now()}`,
+    logGroupName: '/aws/lambda/local',
+    logStreamName: 'local-stream',
+    identity: undefined,
+    clientContext: undefined,
+    getRemainingTimeInMillis: () => 30000,
+    done: () => {},
+    fail: () => {},
+    succeed: () => {},
+  };
+
+  try {
+    console.log(`[Lambda] Invoking handler with path: ${event.path}`);
+    const response = await handler(event, context);
+    console.log(`[Lambda] Handler returned status: ${response.statusCode}`);
+    return response;
+  } catch (error) {
+    console.error('[Lambda] Handler error:', error);
+    throw error;
+  }
+}
+```
+
+**What to do**:
+1. Create directory: `src/backend/local-dev/src/utils/`
+2. Open file: `src/backend/local-dev/src/utils/lambda-invoker.ts`
+3. Copy content above
+4. Save
+
+---
+
+### Task 8: Create handler routes
+
+**Location**: `src/backend/local-dev/src/routes/handlers.ts`
 
 **Content**:
 ```typescript
 import { Router, Request, Response } from 'express';
+import path from 'path';
+import { createMockAPIGatewayEvent, invokeLambdaHandler } from '../utils/lambda-invoker';
 
 const router = Router();
 
 /**
- * GET /health
- * Simple health check endpoint
- */
-router.get('/health', (req: Request, res: Response) => {
-  res.json({
-    status: 'ok',
-    timestamp: new Date().toISOString(),
-  });
-});
-
-/**
  * GET /api/home
- * Home endpoint - verify API is running
+ * Invokes the compiled Lambda home handler
  */
-router.get('/api/home', (req: Request, res: Response) => {
-  res.json({
-    message: 'hello from local backend',
-    source: 'local',
-    timestamp: new Date().toISOString(),
-  });
+router.get('/api/home', async (req: Request, res: Response) => {
+  try {
+    const handlerPath = path.resolve(__dirname, '../../../dist/functions/home/get-home.js');
+
+    // Bust the require cache so changes in the compiled handler are picked up without restart.
+    delete require.cache[require.resolve(handlerPath)];
+
+    const { handler: homeHandler } = require(handlerPath);
+
+    // Create mock API Gateway event from Express request
+    const event = createMockAPIGatewayEvent(req);
+
+    // Invoke Lambda handler
+    const lambdaResponse = await invokeLambdaHandler(homeHandler, event);
+
+    // Send Lambda response back to client
+    if (lambdaResponse.headers) {
+      Object.entries(lambdaResponse.headers).forEach(([key, value]) => {
+        res.setHeader(key, value as string);
+      });
+    }
+
+    res.status(lambdaResponse.statusCode || 200).send(lambdaResponse.body);
+  } catch (error) {
+    console.error('[Handler] Error invoking Lambda:', error);
+    res.status(500).json({
+      error: 'Internal Server Error',
+      message: error instanceof Error ? error.message : 'Unknown error',
+    });
+  }
 });
 
 export default router;
 ```
 
 **What to do**:
-1. Open file: `src/backend/local-dev/src/routes/health.ts`
-2. Copy content above
-3. Save
+1. Create directory: `src/backend/local-dev/src/routes/`
+2. Open file: `src/backend/local-dev/src/routes/handlers.ts`
+3. Copy content above
+4. Save
 
----
-
-### Task 8: Create Express app
+**Note**: Uses cache-busting via `require.cache` deletion for hot reload support. Path resolves to `dist/functions/home/get-home.js` which is the compiled Lambda handler.
 
 **Location**: `src/backend/local-dev/src/index.ts`
 
@@ -339,7 +455,7 @@ export default router;
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { config, validateConfig } from './config';
-import healthRoutes from './routes/health';
+import handlersRoutes from './routes/handlers';
 
 // Validate configuration
 try {
@@ -380,8 +496,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 
 // === ROUTES ===
 
-// Health check routes
-app.use('/', healthRoutes);
+// Lambda handler routes
+import handlersRoutes from './routes/handlers';
+app.use('/', handlersRoutes);
 
 // === ERROR HANDLING ===
 
@@ -410,9 +527,9 @@ const server = app.listen(config.port, () => {
   console.log(`\n🚀 Local Backend Server Started`);
   console.log(`📡 http://localhost:${config.port}`);
   console.log(`✅ CORS enabled for ${config.frontendUrl}`);
-  console.log(`\nTry these endpoints:`);
-  console.log(`  - http://localhost:${config.port}/health`);
-  console.log(`  - http://localhost:${config.port}/api/home`);
+  console.log(`\n⚡ Lambda handler integration active`);
+  console.log(`\nTry this endpoint:`);
+  console.log(`  - http://localhost:${config.port}/api/home (invokes Lambda handler)`);
   console.log(`\nPress Ctrl+C to stop\n`);
 });
 
@@ -469,10 +586,21 @@ ls -la src/backend/local-dev/
 # - node_modules/ (after npm install)
 ```
 
-### Step 2: Start the server
+### Step 2: Build backend first
 
 ```bash
-# Make sure you're in src/backend/local-dev/
+# Build backend to generate compiled functions
+cd src/backend
+npm run build
+
+# This creates src/dist/functions/ with compiled Lambda handlers
+# Expected output should show successful TypeScript compilation
+```
+
+### Step 3: Start the local dev server
+
+```bash
+# Navigate to local-dev directory
 cd src/backend/local-dev
 
 # Start with npm run dev
@@ -486,36 +614,36 @@ npm run dev
 # 🚀 Local Backend Server Started
 # 📡 http://localhost:3000
 # ✅ CORS enabled for http://localhost:4200
-# Try these endpoints:
-#   - http://localhost:3000/health
-#   - http://localhost:3000/api/home
+# ⚡ Lambda handler integration active
+# Try this endpoint:
+#   - http://localhost:3000/api/home (invokes Lambda handler)
 ```
 
-### Step 3: Test endpoints
+### Step 4: Test the Lambda endpoint
 
 **In another terminal**:
 ```bash
-# Test health endpoint
-curl http://localhost:3000/health
-
-# Expected response:
-# {"status":"ok","timestamp":"2026-01-25T..."}
-
-# Test home endpoint
+# Test home endpoint (invokes Lambda handler)
 curl http://localhost:3000/api/home
 
-# Expected response:
-# {"message":"hello from local backend","source":"local","timestamp":"2026-01-25T..."}
+# Expected response (from Lambda handler):
+# {"message":"hello from local backend","timestamp":"2026-01-25T..."}
+
+# You should see in the dev server terminal:
+# [GET] /api/home - 200 (45ms)
+# [Lambda] Invoking handler with path: /api/home
+# [Lambda] Handler returned status: 200
 ```
 
-### Step 4: Test from browser
+### Step 5: Test from browser
 
-1. Open http://localhost:3000/health
-2. Should see JSON response
+1. Open http://localhost:3000/api/home
+2. Should see Lambda handler response (JSON)
 3. Check browser Network tab (F12)
 4. Should show 200 status
+5. Check console logs in terminal - should show Lambda invocation
 
-### Step 5: Test CORS
+### Step 6: Test CORS
 
 ```bash
 # With server running, in another terminal:
@@ -523,14 +651,14 @@ curl http://localhost:3000/api/home
 curl -H "Origin: http://localhost:4200" \
      -H "Access-Control-Request-Method: GET" \
      -H "Access-Control-Request-Headers: Content-Type" \
-     -X OPTIONS http://localhost:3000/health -v
+     -X OPTIONS http://localhost:3000/api/home -v
 
 # Look for response headers:
 # Access-Control-Allow-Origin: http://localhost:4200
 # Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS
 ```
 
-### Step 6: Stop the server
+### Step 7: Stop the server
 
 ```bash
 # Press Ctrl+C in the terminal running npm run dev
@@ -546,39 +674,64 @@ curl -H "Origin: http://localhost:4200" \
 ## Notes
 
 **Key Points**:
-- Express server handles HTTP requests
+- Express server wraps Lambda handlers for local development
+- Lambda handlers imported from compiled `src/dist/functions/`
+- Mock API Gateway event translates Express requests to Lambda events
+- Lambda response passed directly to client
 - CORS allows Angular to make requests
 - Configuration from `.env` file
-- Logging shows all requests
+- Logging shows all requests AND Lambda invocations
 - Error handling logs errors but doesn't expose them
 
+**Lambda Handler Path**:
+- Update the import path in `routes/handlers.ts` if your build output differs
+- Currently assumes: `src/dist/functions/get-home/index.js`
+- Verify path matches your backend build configuration
+
 **Future Enhancements**:
+- Add more routes/handlers as needed
 - Add authentication middleware (JWT)
 - Add rate limiting
 - Add request validation
 - Add database connection
 - Add API versioning
+- Create route handler factory for easier multi-handler setup
+
+**Hot Reload Support**:
+- Uses cache-busting via `require.cache` deletion
+- Can run with `npm run dev:watch` for automatic backend rebuild + server reload
+- Backend watch (`npm run watch`) recompiles on file changes
+- Server reload (`ts-node-dev`) restarts on local-dev file changes
+- Cache-busting ensures fresh handler import on each request
 
 **Dependencies**:
-- None (standalone server for MVP)
+- Requires compiled backend (run `npm run build` in backend first)
 - Can add database in Story 4.5
+- Lambda handler must export `handler` function
 
-**Estimated Time**: 6-8 hours
+**Estimated Time**: 8-10 hours
 
 ---
 
 ## Completion Checklist
 
-- [ ] Express server created
-- [ ] Listening on port 3000
-- [ ] Health check endpoint responds
-- [ ] Home endpoint responds
-- [ ] CORS configured for localhost:4200
-- [ ] `.env` configuration working
-- [ ] Can start with `npm run dev`
-- [ ] Can stop with Ctrl+C
-- [ ] Ready for STORY 4.5 (Mock database)
+- [x] Express server created
+- [x] Listening on port 3000
+- [x] Lambda invoker utility created
+- [x] Handler routes created
+- [x] Mock API Gateway event created correctly
+- [x] `/api/home` endpoint invokes Lambda handler
+- [x] Lambda response returned to client
+- [x] CORS configured for localhost:4200
+- [x] `.env` configuration working
+- [x] Backend compiled before running
+- [x] Can start with `npm run dev` or `npm run dev:watch` (with hot reload)
+- [x] Can stop with Ctrl+C
+- [x] Console logs show Lambda invocations
+- [x] Hot reload support via cache-busting require
+- [x] Ready for STORY 4.5 (Mock database)
 
 ---
 
-**Last Updated**: 2026-01-25
+**Last Updated**: 2026-01-25  
+**Completed**: 2026-01-25
